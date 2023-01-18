@@ -34,7 +34,12 @@ const Navbar = () => {
               <MenuIcon />
             </IconButton>
             <NavbarTitle variant="h6">MyStudyApp</NavbarTitle>
-            <Button sx={{ color: "black" }}>Register</Button>
+            <Button href="/" sx={{ color: "black" }}>
+              Home
+            </Button>
+            <Button href="/register" sx={{ color: "black" }}>
+              Register
+            </Button>
             <Button sx={{ color: "black" }}>Login</Button>
           </Toolbar>
         </AppBar>

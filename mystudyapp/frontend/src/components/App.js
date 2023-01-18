@@ -2,6 +2,7 @@ import { Grid } from "@mui/material";
 import React, { Component } from "react";
 import { render } from "react-dom";
 import Header from "./Header";
+import HomePage from "./HomePage";
 
 export default function App() {
   return (
@@ -10,7 +11,7 @@ export default function App() {
         <Header />
       </Grid>
       <Grid item xs={12}>
-        <div>HOME PAGE</div>
+        <HomePage />
       </Grid>
     </Grid>
   );
