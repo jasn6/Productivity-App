@@ -24,7 +24,7 @@ const NavbarTitle = styled(Typography)`
   flex-grow: 1;
 `;
 
-const Navbar = () => {
+export default function Navbar() {
   return (
     <ThemeProvider theme={theme}>
       <NavbarWrapper>
@@ -40,12 +40,12 @@ const Navbar = () => {
             <Button href="/register" sx={{ color: "black" }}>
               Register
             </Button>
-            <Button sx={{ color: "black" }}>Login</Button>
+            <Button href="/login" sx={{ color: "black" }}>
+              Login
+            </Button>
           </Toolbar>
         </AppBar>
       </NavbarWrapper>
     </ThemeProvider>
   );
-};
-
-export default Navbar;
+}

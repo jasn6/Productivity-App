@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import axiosInstance from "../axios";
 import { useNavigate } from "react-router-dom";
-import { createMuiTheme, ThemeProvider } from "@mui/material";
+import axiosInstance from "../axios";
+import { createMuiTheme, ThemeProvider, Typography } from "@mui/material";
 import styled from "@mui/styled-engine-sc";
-import { TextField, Button, Grid, Typography, Icon } from "@mui/material";
-import { PersonAdd } from "@mui/icons-material";
+import { TextField, Button, Grid } from "@mui/material";
+import { Lock, Person } from "@mui/icons-material";
 
 const theme = createMuiTheme({
   palette: {
@@ -21,30 +21,25 @@ const Wrapper = styled("div")`
   padding: 2rem;
 `;
 
-export default function Registration() {
+export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-
   const navigate = useNavigate();
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    // Validate form data before submitting
-    if (password !== confirmPassword) {
-      alert("Password and confirm password do not match");
-      return;
-    }
-    // Submit the form data to the server
     axiosInstance
-      .post("users/register", {
+      .post(`api/token`, {
         user_name: username,
         password: password,
       })
       .then((res) => {
-        navigate("/login");
-        console.log(username);
-        console.log(password);
+        //Grab Tokens returned from endpoint
+        localStorage.setItem("access_token", res.data.access);
+        localStorage.setItem("refresh_token", res.data.refresh);
+        axiosInstance.defaults.headers["Authorization"] =
+          "JWT " + localStorage.getItem("access_token");
+        navigate("/");
       });
   };
 
@@ -54,14 +49,10 @@ export default function Registration() {
         <form onSubmit={handleSubmit}>
           <Grid container spacing={3} alignItems="center" justify="center">
             <Grid item xs={12} align="center">
-              <Icon fontSize="large">
-                <PersonAdd />
-              </Icon>
+              <Person />
             </Grid>
             <Grid item xs={12} align="center">
-              <Typography variant="h4" align="center" gutterBottom>
-                Sign Up
-              </Typography>
+              <Typography variant="h4">Login</Typography>
             </Grid>
             <Grid item xs={12} align="center">
               <TextField
@@ -70,6 +61,9 @@ export default function Registration() {
                 value={username}
                 onChange={(event) => setUsername(event.target.value)}
                 required
+                InputProps={{
+                  startAdornment: <Person fontSize="small" color="primary" />,
+                }}
               />
             </Grid>
             <Grid item xs={12} align="center">
@@ -80,21 +74,14 @@ export default function Registration() {
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}
                 required
+                InputProps={{
+                  startAdornment: <Lock fontSize="small" color="primary" />,
+                }}
               />
             </Grid>
             <Grid item xs={12} align="center">
-              <TextField
-                label="Confirm Password"
-                variant="outlined"
-                type="password"
-                value={confirmPassword}
-                onChange={(event) => setConfirmPassword(event.target.value)}
-                required
-              />
-            </Grid>
-            <Grid item xs={12} align="center">
-              <Button type="submit" color="secondary" variant="contained">
-                Register
+              <Button type="submit" color="primary" variant="contained">
+                Login
               </Button>
             </Grid>
           </Grid>

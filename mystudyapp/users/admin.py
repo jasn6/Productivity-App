@@ -3,4 +3,8 @@ from users.models import NewUser
 
 # Register your models here.
 
-admin.site.register(NewUser)
+class UserAdmin(admin.ModelAdmin):
+    readonly_fields = ('id',)
+
+
+admin.site.register(NewUser,UserAdmin)

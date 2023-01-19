@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import RegisterPage from "./RegisterPage";
+import LoginPage from "./LoginPage";
 
 import {
   BrowserRouter as Router,
@@ -39,6 +40,7 @@ export default function HomePage() {
       <Routes>
         <Route exact path="/" element={renderHomePage()} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/login" element={<LoginPage />} />
       </Routes>
     </Router>
   );
