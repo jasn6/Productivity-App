@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import RegisterPage from "./RegisterPage";
 import LoginPage from "./LoginPage";
+import Logout from "./Logout";
 
 import {
   BrowserRouter as Router,
@@ -34,13 +35,14 @@ const renderHomePage = () => {
   );
 };
 
-export default function HomePage() {
+export default function HomePage({ isLogin, setLogin }) {
   return (
     <Router>
       <Routes>
         <Route exact path="/" element={renderHomePage()} />
         <Route path="/register" element={<RegisterPage />} />
-        <Route path="/login" element={<LoginPage />} />
+        <Route path="/login" element={<LoginPage setLogin={setLogin} />} />
+        <Route path="/logout" element={<Logout setLogin={setLogin} />} />
       </Routes>
     </Router>
   );

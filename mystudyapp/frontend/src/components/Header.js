@@ -24,7 +24,29 @@ const NavbarTitle = styled(Typography)`
   flex-grow: 1;
 `;
 
-export default function Navbar() {
+export default function Navbar({ isLogin }) {
+  const notloggedin = () => {
+    return (
+      <>
+        <Button href="/register" sx={{ color: "black" }}>
+          Register
+        </Button>
+        <Button href="/login" sx={{ color: "black" }}>
+          Login
+        </Button>
+      </>
+    );
+  };
+  const loggedin = () => {
+    return (
+      <>
+        <Button href="/logout" sx={{ color: "black" }}>
+          Logout
+        </Button>
+      </>
+    );
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <NavbarWrapper>
@@ -37,12 +59,7 @@ export default function Navbar() {
             <Button href="/" sx={{ color: "black" }}>
               Home
             </Button>
-            <Button href="/register" sx={{ color: "black" }}>
-              Register
-            </Button>
-            <Button href="/login" sx={{ color: "black" }}>
-              Login
-            </Button>
+            {isLogin ? loggedin() : notloggedin()}
           </Toolbar>
         </AppBar>
       </NavbarWrapper>

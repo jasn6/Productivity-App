@@ -21,13 +21,14 @@ const Wrapper = styled("div")`
   padding: 2rem;
 `;
 
-export default function Login() {
+export default function Login({ setLogin }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    setLogin(true);
     axiosInstance
       .post(`api/token`, {
         user_name: username,
