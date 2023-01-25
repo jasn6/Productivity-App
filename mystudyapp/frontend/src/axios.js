@@ -19,19 +19,11 @@ axiosInstance.interceptors.response.use(
   },
   async function (error) {
     const originalRequest = error.config;
-    if (typeof error.response === "undefined") {
-      alert(
-        "A server/network error occurred. " +
-          "Looks like CORS might be the problem. " +
-          "Sorry about this - we will get it fixed shortly."
-      );
-      return Promise.reject(error);
-    }
     if (
       error.response.status === 401 &&
-      originalRequest.url === baseURL + "token/refresh/"
+      originalRequest.url === baseURL + "api/token/refresh"
     ) {
-      window.location.href = "/login/";
+      window.location.href = "/login";
       return Promise.reject(error);
     }
 
@@ -51,7 +43,7 @@ axiosInstance.interceptors.response.use(
 
         if (tokenParts.exp > now) {
           return axiosInstance
-            .post("/token/refresh/", {
+            .post("api/token/refresh", {
               refresh: refreshToken,
             })
             .then((response) => {
@@ -70,11 +62,11 @@ axiosInstance.interceptors.response.use(
             });
         } else {
           console.log("Refresh token is expired", tokenParts.exp, now);
-          window.location.href = "/login/";
+          window.location.href = "/login";
         }
       } else {
         console.log("Refresh token not available.");
-        window.location.href = "/login/";
+        window.location.href = "/login";
       }
     }
 

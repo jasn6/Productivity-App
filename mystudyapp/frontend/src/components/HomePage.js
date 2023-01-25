@@ -2,7 +2,9 @@ import React, { useState, useEffect } from "react";
 import RegisterPage from "./RegisterPage";
 import LoginPage from "./LoginPage";
 import Logout from "./Logout";
-
+import CreateRoom from "./CreateRoom";
+import UsersRooms from "./UserRooms";
+import axiosInstance from "../axios";
 import {
   BrowserRouter as Router,
   Routes,
@@ -22,14 +24,7 @@ const renderHomePage = () => {
         <Button variant="contained" to="/join" component={Link}>
           Join a Room
         </Button>
-        <Button
-          variant="contained"
-          color="secondary"
-          to="/create"
-          component={Link}
-        >
-          Create a Room
-        </Button>
+        <Button href="/create-room">Create a Room</Button>
       </Grid>
     </Grid>
   );
@@ -39,10 +34,18 @@ export default function HomePage({ isLogin, setLogin }) {
   return (
     <Router>
       <Routes>
-        <Route exact path="/" element={renderHomePage()} />
+        <Route
+          exact
+          path="/"
+          element={
+            isLogin ? <Navigate to={"/rooms"} replace /> : renderHomePage()
+          }
+        />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/login" element={<LoginPage setLogin={setLogin} />} />
         <Route path="/logout" element={<Logout setLogin={setLogin} />} />
+        <Route path="/create-room" element={<CreateRoom />} />
+        <Route path="/rooms" element={<UsersRooms />} />
       </Routes>
     </Router>
   );

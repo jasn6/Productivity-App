@@ -1,6 +1,7 @@
 from django.db import models
 import string
 import random
+from django.conf import settings
 
 # Create your models here.
 def generate_unique_code():
@@ -16,7 +17,8 @@ def generate_unique_code():
 class Room(models.Model):
     code = models.CharField(
         max_length=8, default=generate_unique_code, unique=True)
-    host = models.CharField(max_length=50, unique=True)
+    host = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     capacity = models.IntegerField(default=1)
     theme = models.CharField(max_length=50)
     created_at = models.DateTimeField(auto_now_add=True)
