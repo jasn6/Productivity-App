@@ -39,6 +39,7 @@ const InputContainer = styled("div")({
 
 const CreateRoom = () => {
   const [capacity, setCapacity] = useState("");
+  const [name, setName] = useState("");
   const [theme, setTheme] = useState("");
   const [error, setError] = useState(false);
   const navigate = useNavigate();
@@ -52,6 +53,7 @@ const CreateRoom = () => {
     }
     axiosInstance
       .post("api/create-room", {
+        name: name,
         capacity: capacity,
         theme: theme,
       })
@@ -67,6 +69,19 @@ const CreateRoom = () => {
         Create Room
       </Title>
       <Form onSubmit={handleSubmit}>
+        <InputContainer>
+          <FormControl error={error}>
+            <InputLabel htmlFor="name">Name</InputLabel>
+            <Input
+              id="name"
+              value={name}
+              onChange={(event) => setName(event.target.value)}
+            />
+            {error && (
+              <FormHelperText error>Enter the room name</FormHelperText>
+            )}
+          </FormControl>
+        </InputContainer>
         <InputContainer>
           <FormControl error={error}>
             <InputLabel htmlFor="capacity">Capacity</InputLabel>

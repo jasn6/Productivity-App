@@ -32,8 +32,9 @@ class CreateRoom(APIView):
         if serializer.is_valid():
             theme = serializer.data.get('theme')
             capacity = serializer.data.get('capacity')
+            name = serializer.data.get("name")
             room = Room(theme=theme,
-                        capacity=capacity, host=user)
+                        capacity=capacity, host=user, name=name)
             room.save()
 
         return Response(RoomSerializer(room).data, status=status.HTTP_200_OK)
