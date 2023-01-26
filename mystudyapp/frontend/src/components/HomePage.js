@@ -4,6 +4,7 @@ import LoginPage from "./LoginPage";
 import Logout from "./Logout";
 import CreateRoom from "./CreateRoom";
 import UsersRooms from "./UserRooms";
+import Room from "./Room";
 import axiosInstance from "../axios";
 import {
   BrowserRouter as Router,
@@ -46,6 +47,7 @@ export default function HomePage({ isLogin, setLogin }) {
         <Route path="/logout" element={<Logout setLogin={setLogin} />} />
         <Route path="/create-room" element={<CreateRoom />} />
         <Route path="/rooms" element={<UsersRooms />} />
+        <Route path="/room/:roomCode" element={<Room />} />
       </Routes>
     </Router>
   );

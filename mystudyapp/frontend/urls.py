@@ -8,5 +8,6 @@ urlpatterns = [
     path('rooms',home),
     path('login',home),
     path('logout', home),
+    path('room/<str:roomCode>',home),
 
 ]
