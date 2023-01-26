@@ -28,7 +28,12 @@ export default function UsersRooms() {
         {/* End hero unit */}
         <Grid container spacing={4}>
           <Grid item xs={12} align="center">
-            <Button href="/create-room">Create Room</Button>
+            <Button variant="contained" color="primary" href="/create-room">
+              Create Room
+            </Button>
+            <Button variant="contained" color="secondary" href="/join-room">
+              Join Room
+            </Button>
           </Grid>
           {rooms.map((room) => (
             <Grid item key={room.id} xs={12} sm={6} md={4}>
