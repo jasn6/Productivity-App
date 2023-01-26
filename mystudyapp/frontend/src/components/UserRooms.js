@@ -57,7 +57,7 @@ export default function UsersRooms() {
                   <Typography>Theme: {room.theme}</Typography>
                 </CardContent>
                 <CardActions>
-                  <Button size="small">View</Button>
+                  <Button size="small">Join</Button>
                   <Button size="small">Edit</Button>
                 </CardActions>
               </Card>
