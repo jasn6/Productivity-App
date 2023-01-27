@@ -2,10 +2,13 @@ import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Button, Grid, Typography } from "@mui/material";
 import { createClient } from "pexels";
+import axiosInstance from "../axios";
 
 export default function Room(props) {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
+  const [backgrounds, setBackgrounds] = useState([]);
+  const [currBackground, setCurrBackground] = useState(0);
   const { roomCode } = useParams();
 
   React.useEffect(() => {
@@ -13,21 +16,41 @@ export default function Room(props) {
     const client = createClient(
       "ZDTi3aaQbzp3ZPwbSmpMnyFQtgQO70IUKxhxBxtQbmEnubRDNOT7cXO3"
     );
-    client.collections.media({ per_page: 1, id: "u2qrglb" }).then((media) => {
-      console.log(media);
+    client.collections.media({ per_page: 15, id: "u2qrglb" }).then((media) => {
+      setBackgrounds(media.media);
     });
   }, []);
 
+  React.useEffect(() => {
+    if (backgrounds.length) {
+      document.querySelector(".room-back").src =
+        backgrounds[currBackground]["video_files"][0].link;
+    }
+  }, [currBackground]);
+
   const getRoomDetails = () => {
-    return fetch("/api/get-room" + "?code=" + roomCode)
+    return axiosInstance
+      .get(`api/get-room?code=${roomCode}`)
       .then((res) => {
-        if (!res.ok) {
+        if (res.status != 200) {
           navigate("/");
         }
-        return res.json();
+        return res.data;
       })
       .then((data) => setData(data));
   };
+
+  const getNextBack = (event) => {
+    event.preventDefault();
+    setCurrBackground((prev) => prev + 1);
+  };
+
+  const getPrevBack = (event) => {
+    event.preventDefault();
+    setCurrBackground((prev) => prev - 1);
+  };
+
+  if (!backgrounds.length) return <div>Loading...</div>;
 
   return (
     <>
@@ -53,10 +76,32 @@ export default function Room(props) {
             Leave Room
           </Button>
         </Grid>
+        <Grid item xs={12} align="center">
+          {currBackground > 0 && (
+            <Button
+              color="primary"
+              variant="contained"
+              size="small"
+              onClick={getPrevBack}
+            >
+              &#9664;
+            </Button>
+          )}
+          {currBackground < backgrounds.length - 1 && (
+            <Button
+              color="primary"
+              variant="contained"
+              size="small"
+              onClick={getNextBack}
+            >
+              &#9654;
+            </Button>
+          )}
+        </Grid>
       </Grid>
       <video autoPlay loop muted playsInline className="room-back">
         <source
-          src="https://player.vimeo.com/external/269971860.hd.mp4?s=eae965838585cc8342bb5d5253d06a52b2415570&profile_id=174&oauth2_token_id=57447761"
+          src={backgrounds[currBackground]["video_files"][0].link}
           type="video/mp4"
         />
       </video>
