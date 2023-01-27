@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework import generics, status
 from .models import Room
-from .serializers import RoomSerializer, CreateRoomSerializer
+from .serializers import RoomSerializer, CreateRoomSerializer, UpdateRoomSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
@@ -66,5 +66,25 @@ class JoinRoom(APIView):
             else:
                 return Response({'Bad Request:' 'Invalid Room Code'},status=status.HTTP_400_BAD_REQUEST)
         return Response({'Bad Request': 'Invalid post data, did not find a code key'}, status = status.HTTP_400_BAD_REQUEST)
+
+class UpdateRoom(APIView):
+    serializer_class = UpdateRoomSerializer
+    def patch(self,request, format=None):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            capacity = serializer.data.get('capacity')
+            theme = serializer.data.get('theme')
+            name = serializer.data.get('name')
+            code = serializer.data.get('code')
+            queryset = Room.objects.filter(code=code)
+            if queryset.exists():
+                room = queryset[0]
+                room.capacity = capacity
+                room.theme = theme
+                room.name = name
+                room.save(update_fields=['capacity', 'theme','name'])
+                return Response(RoomSerializer(room).data,status=status.HTTP_200_OK)
+            return Response({'Message':'Room not found'},status=status.HTTP_404_NOT_FOUND)
+        return Response({'Message': 'Data is not valid'}, status = status.HTTP_400_BAD_REQUEST)
 
             
