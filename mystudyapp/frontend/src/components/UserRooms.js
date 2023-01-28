@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axiosInstance from "../axios";
 import RoomInfo from "./RoomInfo";
+import CreateRoomForm from "./CreateRoomForm";
 import {
   Container,
   Card,
@@ -44,7 +45,11 @@ export default function UsersRooms() {
         {/* End hero unit */}
         <Grid container spacing={4}>
           <Grid item xs={12} align="center">
-            <Button variant="contained" color="primary" href="/create-room">
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleClickOpen}
+            >
               Create Room
             </Button>
             <Button variant="contained" color="secondary" href="/join-room">
@@ -52,14 +57,22 @@ export default function UsersRooms() {
             </Button>
           </Grid>
           {rooms.map((room) => (
-            <RoomInfo
-              room={room}
-              updateRooms={updateRooms}
-              setUpdateRooms={setUpdateRooms}
-            />
+            <RoomInfo room={room} setUpdateRooms={setUpdateRooms} />
           ))}
         </Grid>
       </Container>
+      <Dialog open={open} onClose={handleClose}>
+        <DialogTitle>Create Room</DialogTitle>
+        <DialogContent>
+          <CreateRoomForm
+            setUpdateRooms={setUpdateRooms}
+            handleClose={handleClose}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Close</Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }

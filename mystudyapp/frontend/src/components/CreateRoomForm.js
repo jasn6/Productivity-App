@@ -24,12 +24,10 @@ const InputContainer = styled("div")({
   margin: "8px 0",
 });
 
-export default function EditRoomForm({ theRoom, setUpdateRooms, handleClose }) {
-  const roomCode = theRoom.code;
-
-  const [capacity, setCapacity] = useState(theRoom.capacity);
-  const [name, setName] = useState(theRoom.name);
-  const [theme, setTheme] = useState(theRoom.theme);
+export default function CreateRoomForm({ setUpdateRooms, handleClose }) {
+  const [capacity, setCapacity] = useState("");
+  const [name, setName] = useState("");
+  const [theme, setTheme] = useState("");
   const [error, setError] = useState(false);
   const navigate = useNavigate();
 
@@ -41,11 +39,10 @@ export default function EditRoomForm({ theRoom, setUpdateRooms, handleClose }) {
       setError(false);
     }
     axiosInstance
-      .patch("api/update-room", {
+      .post("api/create-room", {
         name: name,
         capacity: capacity,
         theme: theme,
-        code: roomCode,
       })
       .then((res) => {
         if (res.status == 200 && error) {
@@ -55,7 +52,7 @@ export default function EditRoomForm({ theRoom, setUpdateRooms, handleClose }) {
       })
       .catch((error) => {
         console.log(error);
-        setErrorMessage("Update Failed");
+        setErrorMessage("Creation Failed");
       });
   };
 
@@ -68,11 +65,6 @@ export default function EditRoomForm({ theRoom, setUpdateRooms, handleClose }) {
             id="name"
             value={name}
             onChange={(event) => setName(event.target.value)}
-            inputProps={{
-              style: {
-                textAlign: "center",
-              },
-            }}
           />
           {error && <FormHelperText error>Enter the room name</FormHelperText>}
         </FormControl>
@@ -85,12 +77,6 @@ export default function EditRoomForm({ theRoom, setUpdateRooms, handleClose }) {
             id="capacity"
             value={capacity}
             onChange={(event) => setCapacity(event.target.value)}
-            inputProps={{
-              min: 1,
-              style: {
-                textAlign: "center",
-              },
-            }}
           />
           {error && (
             <FormHelperText error>Enter the room capacity</FormHelperText>
@@ -121,7 +107,7 @@ export default function EditRoomForm({ theRoom, setUpdateRooms, handleClose }) {
         </FormControl>
       </InputContainer>
       <Button variant="contained" color="primary" type="submit">
-        Update Room
+        Create Room
       </Button>
     </Form>
   );

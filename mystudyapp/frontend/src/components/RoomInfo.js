@@ -14,7 +14,7 @@ import {
   DialogContent,
 } from "@mui/material";
 
-export default function RoomInfo({ room, updateRooms, setUpdateRooms }) {
+export default function RoomInfo({ room, setUpdateRooms }) {
   const [open, setOpen] = useState(false);
   const handleClickOpen = () => {
     setOpen(true);
@@ -23,9 +23,6 @@ export default function RoomInfo({ room, updateRooms, setUpdateRooms }) {
     setOpen(false);
   };
 
-  useEffect(() => {
-    handleClose();
-  }, [updateRooms]);
   return (
     <>
       <Grid item key={room.id} xs={12} sm={6} md={4}>
@@ -66,7 +63,11 @@ export default function RoomInfo({ room, updateRooms, setUpdateRooms }) {
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Edit Room {room.code}</DialogTitle>
         <DialogContent>
-          <EditRoomForm theRoom={room} setUpdateRooms={setUpdateRooms} />
+          <EditRoomForm
+            theRoom={room}
+            setUpdateRooms={setUpdateRooms}
+            handleClose={handleClose}
+          />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Close</Button>

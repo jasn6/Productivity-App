@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import RegisterPage from "./RegisterPage";
 import LoginPage from "./LoginPage";
 import Logout from "./Logout";
-import CreateRoom from "./CreateRoom";
 import UsersRooms from "./UserRooms";
 import Room from "./Room";
 import JoinRoom from "./JoinRoom";
@@ -46,7 +45,6 @@ export default function HomePage({ isLogin, setLogin }) {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/login" element={<LoginPage setLogin={setLogin} />} />
         <Route path="/logout" element={<Logout setLogin={setLogin} />} />
-        <Route path="/create-room" element={<CreateRoom />} />
         <Route path="/rooms" element={<UsersRooms />} />
         <Route path="/room/:roomCode" element={<Room />} />
         <Route path="/join-room" element={<JoinRoom />} />
