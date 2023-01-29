@@ -28,49 +28,69 @@ export default function CreateRoomForm({ setUpdateRooms, handleClose }) {
   const [capacity, setCapacity] = useState("");
   const [name, setName] = useState("");
   const [theme, setTheme] = useState("");
-  const [error, setError] = useState(false);
+  const [capacityError, setCapacityError] = useState(false);
+  const [nameError, setNameError] = useState(false);
+  const [themeError, setThemeError] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    if (!capacity || !theme || !name) {
-      setError(true);
+    let formIsValid = true;
+    if (!name) {
+      setNameError(true);
+      formIsValid = false;
     } else {
-      setError(false);
+      setNameError(false);
     }
-    axiosInstance
-      .post("api/create-room", {
-        name: name,
-        capacity: capacity,
-        theme: theme,
-      })
-      .then((res) => {
-        if (res.status == 200 && error) {
-          setUpdateRooms((prev) => !prev);
-          handleClose();
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-        setErrorMessage("Creation Failed");
-      });
+    if (!theme) {
+      setThemeError(true);
+      formIsValid = false;
+    } else {
+      setThemeError(false);
+    }
+    if (!capacity) {
+      setCapacityError(true);
+      formIsValid = false;
+    } else {
+      setCapacityError(false);
+    }
+    if (formIsValid) {
+      axiosInstance
+        .post("api/create-room", {
+          name: name,
+          capacity: capacity,
+          theme: theme,
+        })
+        .then((res) => {
+          if (res.status == 200) {
+            setUpdateRooms((prev) => !prev);
+            handleClose();
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+          setErrorMessage("Creation Failed");
+        });
+    }
   };
 
   return (
     <Form onSubmit={handleSubmit}>
       <InputContainer>
-        <FormControl error={error}>
+        <FormControl error={nameError}>
           <InputLabel htmlFor="name">Name</InputLabel>
           <Input
             id="name"
             value={name}
             onChange={(event) => setName(event.target.value)}
           />
-          {error && <FormHelperText error>Enter the room name</FormHelperText>}
+          {nameError && (
+            <FormHelperText error>Enter the room name</FormHelperText>
+          )}
         </FormControl>
       </InputContainer>
       <InputContainer>
-        <FormControl error={error}>
+        <FormControl error={capacityError}>
           <InputLabel htmlFor="capacity">Capacity</InputLabel>
           <Input
             type="number"
@@ -78,13 +98,13 @@ export default function CreateRoomForm({ setUpdateRooms, handleClose }) {
             value={capacity}
             onChange={(event) => setCapacity(event.target.value)}
           />
-          {error && (
+          {capacityError && (
             <FormHelperText error>Enter the room capacity</FormHelperText>
           )}
         </FormControl>
       </InputContainer>
       <InputContainer>
-        <FormControl error={error}>
+        <FormControl error={themeError}>
           <InputLabel id="theme-select">Theme</InputLabel>
           <Select
             id="theme"
@@ -101,7 +121,7 @@ export default function CreateRoomForm({ setUpdateRooms, handleClose }) {
             <MenuItem value="summer">Summer</MenuItem>
             <MenuItem value="library">Library</MenuItem>
           </Select>
-          {error && (
+          {themeError && (
             <FormHelperText error>Select the room theme</FormHelperText>
           )}
         </FormControl>

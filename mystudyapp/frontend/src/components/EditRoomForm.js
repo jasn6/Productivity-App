@@ -30,39 +30,61 @@ export default function EditRoomForm({ theRoom, setUpdateRooms, handleClose }) {
   const [capacity, setCapacity] = useState(theRoom.capacity);
   const [name, setName] = useState(theRoom.name);
   const [theme, setTheme] = useState(theRoom.theme);
+
+  const [capacityError, setCapacityError] = useState(false);
+  const [nameError, setNameError] = useState(false);
+  const [themeError, setThemeError] = useState(false);
+
   const [error, setError] = useState(false);
+
   const navigate = useNavigate();
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    if (!capacity || !theme || !name) {
-      setError(true);
+    let formIsValid = true;
+    if (!name) {
+      setNameError(true);
+      formIsValid = false;
     } else {
-      setError(false);
+      setNameError(false);
     }
-    axiosInstance
-      .patch("api/update-room", {
-        name: name,
-        capacity: capacity,
-        theme: theme,
-        code: roomCode,
-      })
-      .then((res) => {
-        if (res.status == 200 && error) {
-          setUpdateRooms((prev) => !prev);
-          handleClose();
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-        setErrorMessage("Update Failed");
-      });
+    if (!theme) {
+      setThemeError(true);
+      formIsValid = false;
+    } else {
+      setThemeError(false);
+    }
+    if (!capacity) {
+      setCapacityError(true);
+      formIsValid = false;
+    } else {
+      setCapacityError(false);
+    }
+    if (formIsValid) {
+      axiosInstance
+        .patch("api/update-room", {
+          name: name,
+          capacity: capacity,
+          theme: theme,
+          code: roomCode,
+        })
+        .then((res) => {
+          if (res.status == 200) {
+            handleClose();
+            setUpdateRooms((prev) => !prev);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+          setErrorMessage("Update Failed");
+        });
+    }
   };
 
   return (
     <Form onSubmit={handleSubmit}>
       <InputContainer>
-        <FormControl error={error}>
+        <FormControl error={nameError}>
           <InputLabel htmlFor="name">Name</InputLabel>
           <Input
             id="name"
@@ -74,11 +96,13 @@ export default function EditRoomForm({ theRoom, setUpdateRooms, handleClose }) {
               },
             }}
           />
-          {error && <FormHelperText error>Enter the room name</FormHelperText>}
+          {nameError && (
+            <FormHelperText error>Enter the room name</FormHelperText>
+          )}
         </FormControl>
       </InputContainer>
       <InputContainer>
-        <FormControl error={error}>
+        <FormControl error={capacityError}>
           <InputLabel htmlFor="capacity">Capacity</InputLabel>
           <Input
             type="number"
@@ -92,13 +116,13 @@ export default function EditRoomForm({ theRoom, setUpdateRooms, handleClose }) {
               },
             }}
           />
-          {error && (
+          {capacityError && (
             <FormHelperText error>Enter the room capacity</FormHelperText>
           )}
         </FormControl>
       </InputContainer>
       <InputContainer>
-        <FormControl error={error}>
+        <FormControl error={themeError}>
           <InputLabel id="theme-select">Theme</InputLabel>
           <Select
             id="theme"
@@ -115,13 +139,13 @@ export default function EditRoomForm({ theRoom, setUpdateRooms, handleClose }) {
             <MenuItem value="summer">Summer</MenuItem>
             <MenuItem value="library">Library</MenuItem>
           </Select>
-          {error && (
+          {themeError && (
             <FormHelperText error>Select the room theme</FormHelperText>
           )}
         </FormControl>
       </InputContainer>
       <Button variant="contained" color="primary" type="submit">
-        Update Room
+        Update
       </Button>
     </Form>
   );
