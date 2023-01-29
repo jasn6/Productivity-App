@@ -64,7 +64,7 @@ export default function CreateRoomForm({ setUpdateRooms, handleClose }) {
         .then((res) => {
           if (res.status == 200) {
             setUpdateRooms((prev) => !prev);
-            handleClose();
+            handleClose(false);
           }
         })
         .catch((error) => {

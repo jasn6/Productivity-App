@@ -2,25 +2,21 @@ import React, { useState, useEffect } from "react";
 import axiosInstance from "../axios";
 import RoomInfo from "./RoomInfo";
 import CreateRoomForm from "./CreateRoomForm";
+import JoinRoomForm from "./JoinRoomForm";
 import {
   Container,
-  Card,
-  CardMedia,
-  CardContent,
-  CardActions,
   Button,
   Grid,
-  Typography,
   Dialog,
   DialogTitle,
   DialogActions,
   DialogContent,
-  DialogContentText,
 } from "@mui/material";
 export default function UsersRooms() {
   const [updateRooms, setUpdateRooms] = useState(false);
   const [rooms, setRooms] = useState([]);
-  const [open, setOpen] = useState(false);
+  const [openCreateRoom, setOpenCreateRoom] = useState(false);
+  const [openJoinRoom, setOpenJoinRoom] = useState(false);
 
   useEffect(() => {
     axiosInstance
@@ -28,14 +24,6 @@ export default function UsersRooms() {
       .then((res) => res.data)
       .then((data) => setRooms(data));
   }, [updateRooms]);
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
 
   if (!rooms.length) return <div>Loading...</div>;
 
@@ -48,11 +36,15 @@ export default function UsersRooms() {
             <Button
               variant="contained"
               color="primary"
-              onClick={handleClickOpen}
+              onClick={() => setOpenCreateRoom(true)}
             >
               Create Room
             </Button>
-            <Button variant="contained" color="secondary" href="/join-room">
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={() => setOpenJoinRoom(true)}
+            >
               Join Room
             </Button>
           </Grid>
@@ -61,16 +53,26 @@ export default function UsersRooms() {
           ))}
         </Grid>
       </Container>
-      <Dialog open={open} onClose={handleClose}>
+      <Dialog open={openCreateRoom} onClose={() => setOpenCreateRoom(false)}>
         <DialogTitle>Create Room</DialogTitle>
         <DialogContent>
           <CreateRoomForm
             setUpdateRooms={setUpdateRooms}
-            handleClose={handleClose}
+            handleClose={setOpenCreateRoom}
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Close</Button>
+          <Button onClick={() => setOpenCreateRoom(false)}>Close</Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog open={openJoinRoom} onClose={() => setOpenJoinRoom(false)}>
+        <DialogTitle>Join Room</DialogTitle>
+        <DialogContent>
+          <JoinRoomForm />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpenJoinRoom(false)}>Close</Button>
         </DialogActions>
       </Dialog>
     </>
