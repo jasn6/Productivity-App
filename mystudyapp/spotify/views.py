@@ -18,4 +18,20 @@ class AuthUrl(APIView):
 
     return Response({'url': url}, status=status.HTTP_200_OK)
 
+def spotify_callback(request, format=None):
+  code = request.GET.get('code')
+  response = post('https://accounts.spotify.com/api/token', data={
+      'client_id': CLIENT_ID,
+      'client_secret': CLIENT_SECRET,
+      'grant_type': 'authorization_code',
+      'code': code,
+      'redirect_uri': REDIRECT_URI,
+  }).json()
+
+  access_token = response.get('access_token')
+  token_type = response.get('token_type')
+  expires_in = response.get('expires_in')
+  refresh_token = response.get('refresh_token')
+  
+
 
