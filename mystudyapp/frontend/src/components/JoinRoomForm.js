@@ -27,7 +27,7 @@ export default function JoinRoomForm() {
   const [roomCode, setRoomCode] = useState();
   const [errorMessage, setErrorMessage] = useState("");
 
-  const handleSubmit = () => {
+  const handleSubmit = (event) => {
     event.preventDefault();
     if (!roomCode) {
       setErrorMessage("Enter the room code");

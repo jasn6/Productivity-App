@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import EditRoomForm from "./EditRoomForm";
+import axiosInstance from "../axios";
 import {
   Card,
   CardMedia,
@@ -16,6 +17,18 @@ import {
 
 export default function RoomInfo({ room, setUpdateRooms }) {
   const [open, setOpen] = useState(false);
+  const [openDelete, setOpenDelete] = useState(false);
+
+  const deleteRoom = (event) => {
+    event.preventDefault();
+    axiosInstance.delete(`api/delete/${room.code}`).then((res) => {
+      if (res.status == 204) {
+        setOpenDelete(false);
+        setUpdateRooms((prev) => !prev);
+      }
+    });
+  };
+
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -57,6 +70,14 @@ export default function RoomInfo({ room, setUpdateRooms }) {
             <Button size="small" onClick={handleClickOpen}>
               Edit
             </Button>
+            <Button
+              size="small"
+              onClick={() => {
+                setOpenDelete(true);
+              }}
+            >
+              Delete
+            </Button>
           </CardActions>
         </Card>
       </Grid>
@@ -71,6 +92,17 @@ export default function RoomInfo({ room, setUpdateRooms }) {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Close</Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog open={openDelete} onClose={() => setOpenDelete(false)}>
+        <DialogTitle>Are you sure you want to delete this room?</DialogTitle>
+        <DialogContent>
+          <Button variant="contained" color="secondary" onClick={deleteRoom}>
+            Delete
+          </Button>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpenDelete(false)}>Close</Button>
         </DialogActions>
       </Dialog>
     </>
