@@ -87,4 +87,9 @@ class UpdateRoom(APIView):
             return Response({'Message':'Room not found'},status=status.HTTP_404_NOT_FOUND)
         return Response({'Message': 'Data is not valid'}, status = status.HTTP_400_BAD_REQUEST)
 
+class DeleteRoom(generics.DestroyAPIView):
+    queryset = Room.objects.all()
+    serializer_class = RoomSerializer
+    lookup_field = 'code'
+
             
