@@ -9,6 +9,7 @@ export default function Room(props) {
   const [data, setData] = useState([]);
   const [backgrounds, setBackgrounds] = useState([]);
   const [currBackground, setCurrBackground] = useState(0);
+  const [spotifyAuth, setSpotifyAuth] = useState(false);
   const { roomCode } = useParams();
 
   React.useEffect(() => {
@@ -27,6 +28,15 @@ export default function Room(props) {
         backgrounds[currBackground]["video_files"][0].link;
     }
   }, [currBackground]);
+
+  React.useEffect(() => {
+    axiosInstance
+      .get("spotify/is-auth")
+      .then((res) => res.data)
+      .then((data) => {
+        setSpotifyAuth(data.status);
+      });
+  }, []);
 
   const getRoomDetails = () => {
     return axiosInstance
@@ -48,6 +58,14 @@ export default function Room(props) {
   const getPrevBack = (event) => {
     event.preventDefault();
     setCurrBackground((prev) => prev - 1);
+  };
+
+  const handleSpotify = () => {
+    fetch("/spotify/get-auth-url")
+      .then((response) => response.json())
+      .then((data) => {
+        window.location.replace(data.url);
+      });
   };
 
   if (!backgrounds.length) return <div>Loading...</div>;
@@ -98,6 +116,13 @@ export default function Room(props) {
             </Button>
           )}
         </Grid>
+        {!spotifyAuth && (
+          <Grid item xs={12} align="center">
+            <Button variant="contained" onClick={handleSpotify}>
+              Spotify
+            </Button>
+          </Grid>
+        )}
       </Grid>
       <video autoPlay loop muted playsInline className="room-back">
         <source

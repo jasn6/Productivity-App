@@ -13,10 +13,10 @@ class AuthUrl(APIView):
     scopes = 'user-read-playback-state user-modify-playback-state user-read-currently-playing'
     url = Request('GET', 'https://accounts.spotify.com/authorize', params ={
       'client_id': CLIENT_ID,
-      'response_ type': 'code',
+      'response_type': 'code',
       'redirect_uri': REDIRECT_URI,
       'scope': scopes
-    }).prepare.url
+    }).prepare().url
 
     return Response({'url': url}, status=status.HTTP_200_OK)
 
@@ -37,7 +37,7 @@ def spotify_callback(request, format=None):
   
   update_or_create_user_tokens(request.user, access_token, token_type, expires_in, refresh_token)
 
-  redirect("frontend:")
+  return redirect("frontend:")
 
 class isSpotifyAuthenticated(APIView):
   def get(self,request, format=None):
