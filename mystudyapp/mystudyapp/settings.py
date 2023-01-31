@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'frontend.apps.FrontendConfig',
     'rest_framework',
     'users.apps.UsersConfig',
-    'rest_framework_simplejwt.token_blacklist'
+    'rest_framework_simplejwt.token_blacklist',
+    'spotify.apps.SpotifyConfig'
 ]
 
 MIDDLEWARE = [
