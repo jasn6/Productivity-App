@@ -1,8 +1,19 @@
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Button, Grid, Typography } from "@mui/material";
+import {
+  Container,
+  Button,
+  Grid,
+  Dialog,
+  DialogTitle,
+  DialogActions,
+  DialogContent,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { createClient } from "pexels";
 import axiosInstance from "../axios";
+import SpotifyPlayer from "./SpotifyPlayer";
 
 export default function Room(props) {
   const navigate = useNavigate();
@@ -10,6 +21,8 @@ export default function Room(props) {
   const [backgrounds, setBackgrounds] = useState([]);
   const [currBackground, setCurrBackground] = useState(0);
   const [spotifyAuth, setSpotifyAuth] = useState(false);
+  const [accessToken, setAccessToken] = useState();
+  const [open, setOpen] = useState(false);
   const { roomCode } = useParams();
 
   React.useEffect(() => {
@@ -35,6 +48,7 @@ export default function Room(props) {
       .then((res) => res.data)
       .then((data) => {
         setSpotifyAuth(data.status);
+        setAccessToken(data.accessToken);
       });
   }, []);
 
@@ -116,10 +130,16 @@ export default function Room(props) {
             </Button>
           )}
         </Grid>
-        {!spotifyAuth && (
+        {!spotifyAuth ? (
           <Grid item xs={12} align="center">
             <Button variant="contained" onClick={handleSpotify}>
               Spotify
+            </Button>
+          </Grid>
+        ) : (
+          <Grid item xs={12} align="center">
+            <Button variant="contained" onClick={() => setOpen(true)}>
+              Open Spotify Player
             </Button>
           </Grid>
         )}
@@ -130,6 +150,15 @@ export default function Room(props) {
           type="video/mp4"
         />
       </video>
+      <Dialog open={open} onClose={() => setOpen(false)}>
+        <DialogTitle>Spotify Player</DialogTitle>
+        <DialogContent>
+          <SpotifyPlayer accessToken={accessToken} />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpen(false)}>Close</Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }
