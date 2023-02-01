@@ -4,6 +4,7 @@ import { Button, Grid, TextField } from "@mui/material";
 import { createClient } from "pexels";
 import axiosInstance from "../axios";
 import SpotifyWebApi from "spotify-web-api-node";
+import Song from "./Song";
 
 export default function SpotifyPlayer({ accessToken }) {
   const spotifyApi = new SpotifyWebApi({
@@ -11,7 +12,6 @@ export default function SpotifyPlayer({ accessToken }) {
   });
   const [search, setSearch] = useState();
   const [searchResults, setSearchResults] = useState([]);
-  console.log(searchResults);
 
   useEffect(() => {
     if (!search) return setSearchResults([]);
@@ -43,16 +43,21 @@ export default function SpotifyPlayer({ accessToken }) {
   }, [search, accessToken]);
 
   return (
-    <Grid container spacing={4}>
-      <Grid item xs={12} align="center">
-        <TextField
-          id="search"
-          label="Search"
-          variant="outlined"
-          value={search}
-          onChange={(event) => setSearch(event.target.value)}
-        />
+    <>
+      <Grid container spacing={4}>
+        <Grid item xs={12} align="center">
+          <TextField
+            id="search"
+            label="Search"
+            variant="outlined"
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+          />
+        </Grid>
       </Grid>
-    </Grid>
+      {searchResults.map((track) => (
+        <Song song={track} key={track.uri} />
+      ))}
+    </>
   );
 }

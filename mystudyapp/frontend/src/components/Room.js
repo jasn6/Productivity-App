@@ -150,7 +150,18 @@ export default function Room(props) {
           type="video/mp4"
         />
       </video>
-      <Dialog open={open} onClose={() => setOpen(false)}>
+      <Dialog
+        sx={{
+          "& .MuiDialog-paper": {
+            minHeight: "60vh",
+            maxHeight: "60vh",
+            minWidth: "70vh",
+            maxWidth: "70vh",
+          },
+        }}
+        open={open}
+        onClose={() => setOpen(false)}
+      >
         <DialogTitle>Spotify Player</DialogTitle>
         <DialogContent>
           <SpotifyPlayer accessToken={accessToken} />
