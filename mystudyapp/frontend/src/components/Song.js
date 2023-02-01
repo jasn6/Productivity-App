@@ -31,13 +31,20 @@ export default function Song({ song, chooseSong }) {
     >
       <Grid container spacing={2}>
         <Grid item alignItems="center">
-          <ButtonBase sx={{ width: 64, height: 64 }}>
+          <ButtonBase sx={{ width: 64, height: "100%" }}>
             <Img alt="complex" src={song.albumUrl} />
           </ButtonBase>
         </Grid>
         <Grid item xs={12} sm container alignItems="center">
-          <Grid item xs container direction="column" spacing={2}>
-            <Grid item xs>
+          <Grid
+            item
+            xs
+            container
+            direction="column"
+            spacing={2}
+            justifyContent="center"
+          >
+            <Grid item xs justifyContent="center">
               <Typography gutterBottom variant="subtitle1" component="div">
                 {song.title}
               </Typography>
