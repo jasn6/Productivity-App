@@ -13,7 +13,8 @@ import {
 } from "@mui/material";
 import { createClient } from "pexels";
 import axiosInstance from "../axios";
-import SpotifyPlayer from "./SpotifyPlayer";
+import CustomSpotifyPlayer from "./CustomSpotifyPlayer";
+import Playback from "./Playback";
 
 export default function Room(props) {
   const navigate = useNavigate();
@@ -165,8 +166,11 @@ export default function Room(props) {
       >
         <DialogTitle>Spotify Player</DialogTitle>
         <DialogContent>
-          <SpotifyPlayer accessToken={accessToken} />
+          <CustomSpotifyPlayer accessToken={accessToken} />
         </DialogContent>
+        <DialogActions>
+          <Playback accessToken={accessToken} />
+        </DialogActions>
         <DialogActions>
           <Button onClick={() => setOpen(false)}>Close</Button>
         </DialogActions>

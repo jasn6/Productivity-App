@@ -11,7 +11,7 @@ from users.models import NewUser
 # Create your views here.
 class AuthUrl(APIView):
   def get(self,request, format=None):
-    scopes = 'user-read-playback-state user-modify-playback-state user-read-currently-playing'
+    scopes = 'streaming user-read-email user-read-private user-read-playback-state user-modify-playback-state user-read-currently-playing'
     url = Request('GET', 'https://accounts.spotify.com/authorize', params ={
       'client_id': CLIENT_ID,
       'response_type': 'code',
