@@ -75,8 +75,9 @@ export default function Room(props) {
   };
 
   const handleSpotify = () => {
-    fetch("/spotify/get-auth-url")
-      .then((response) => response.json())
+    axiosInstance
+      .get("spotify/get-auth-url")
+      .then((res) => res.data)
       .then((data) => {
         window.location.replace(data.url);
       });

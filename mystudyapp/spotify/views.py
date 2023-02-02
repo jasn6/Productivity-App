@@ -6,6 +6,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from .utils import update_or_create_user_tokens, is_spotify_authenticated
 from django.shortcuts import redirect
+from users.models import NewUser
 
 # Create your views here.
 class AuthUrl(APIView):
@@ -17,11 +18,13 @@ class AuthUrl(APIView):
       'redirect_uri': REDIRECT_URI,
       'scope': scopes
     }).prepare().url
-
+    request.session['user_id'] = request.user.id
     return Response({'url': url}, status=status.HTTP_200_OK)
 
 def spotify_callback(request, format=None):
   code = request.GET.get('code')
+  user_id = request.session.get('user_id')
+  user = NewUser.objects.get(id=user_id)
   response = post('https://accounts.spotify.com/api/token', data={
       'client_id': CLIENT_ID,
       'client_secret': CLIENT_SECRET,
@@ -34,8 +37,8 @@ def spotify_callback(request, format=None):
   token_type = response.get('token_type')
   expires_in = response.get('expires_in')
   refresh_token = response.get('refresh_token')
-  
-  update_or_create_user_tokens(request.user, access_token, token_type, expires_in, refresh_token)
+
+  update_or_create_user_tokens(user, access_token, token_type, expires_in, refresh_token)
 
   return redirect("frontend:")
 
