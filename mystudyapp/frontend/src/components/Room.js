@@ -14,6 +14,7 @@ import {
 import { createClient } from "pexels";
 import axiosInstance from "../axios";
 import CustomSpotifyPlayer from "./CustomSpotifyPlayer";
+import CurrentSong from "./CurrentSong";
 
 export default function Room(props) {
   const navigate = useNavigate();
@@ -213,6 +214,9 @@ export default function Room(props) {
             setCurrentSong={setCurrentSong}
           />
         </DialogContent>
+        <DialogActions>
+          {currentSong && <CurrentSong song={currentSong} />}
+        </DialogActions>
         <DialogActions>
           <Button onClick={() => setOpen(false)}>Close</Button>
         </DialogActions>
