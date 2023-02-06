@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { Button, Grid, TextField } from "@mui/material";
-import { createClient } from "pexels";
-import axiosInstance from "../axios";
+import { Grid, TextField } from "@mui/material";
 import SpotifyWebApi from "spotify-web-api-node";
 import Song from "./Song";
 
-export default function CustomSpotifyPlayer({ accessToken }) {
+export default function CustomSpotifyPlayer({ accessToken, setCurrentSong }) {
   const spotifyApi = new SpotifyWebApi({
     clientId: "802bd4983e2f4fe28ec8d601a97e9fa7",
   });
   const [search, setSearch] = useState();
   const [searchResults, setSearchResults] = useState([]);
+
+  const setSong = (song) => {
+    setCurrentSong(song);
+  };
 
   useEffect(() => {
     if (!search) return setSearchResults([]);
@@ -56,7 +57,7 @@ export default function CustomSpotifyPlayer({ accessToken }) {
         </Grid>
       </Grid>
       {searchResults.map((track) => (
-        <Song song={track} key={track.uri} />
+        <Song song={track} key={track.uri} setSong={setSong} />
       ))}
     </>
   );

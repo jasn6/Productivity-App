@@ -12,9 +12,9 @@ const Img = styled("img")({
   maxHeight: "100%",
 });
 
-export default function Song({ song, chooseSong }) {
+export default function Song({ song, setSong }) {
   function handlePlay() {
-    chooseSong(song);
+    setSong(song);
   }
 
   return (
@@ -28,6 +28,7 @@ export default function Song({ song, chooseSong }) {
           theme.palette.mode === "dark" ? "#1A2027" : "#fff",
         cursor: "pointer",
       }}
+      onClick={handlePlay}
     >
       <Grid container spacing={2}>
         <Grid item alignItems="center">

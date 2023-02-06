@@ -1,20 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import SpotifyPlayer from "react-spotify-web-playback";
+import styled from "@mui/styled-engine-sc";
 import {
-  Container,
   Button,
   Grid,
   Dialog,
   DialogTitle,
   DialogActions,
   DialogContent,
-  TextField,
   Typography,
 } from "@mui/material";
 import { createClient } from "pexels";
 import axiosInstance from "../axios";
 import CustomSpotifyPlayer from "./CustomSpotifyPlayer";
-import Playback from "./Playback";
 
 export default function Room(props) {
   const navigate = useNavigate();
@@ -24,9 +23,38 @@ export default function Room(props) {
   const [spotifyAuth, setSpotifyAuth] = useState(false);
   const [accessToken, setAccessToken] = useState();
   const [open, setOpen] = useState(false);
+  const [currentSong, setCurrentSong] = useState();
   const { roomCode } = useParams();
 
-  React.useEffect(() => {
+  const PlayerContainer = styled("div")({
+    display: "flex",
+    flexDirection: "column",
+    position: "fixed",
+    bottom: 35,
+    right: 35,
+    cursor: "pointer",
+    maxWidth: "350px",
+    alignItems: "center",
+
+    "& .hover-div": {
+      opacity: 0,
+      backgroundColor: "#4caf50",
+      borderRadius: "50%",
+      width: "30px",
+      height: "30px",
+      border: "none",
+      color: "white",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      cursor: "pointer",
+    },
+    "&:hover .hover-div": {
+      opacity: 1,
+    },
+  });
+
+  useEffect(() => {
     getRoomDetails();
     const client = createClient(
       "ZDTi3aaQbzp3ZPwbSmpMnyFQtgQO70IUKxhxBxtQbmEnubRDNOT7cXO3"
@@ -36,14 +64,14 @@ export default function Room(props) {
     });
   }, []);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (backgrounds.length) {
       document.querySelector(".room-back").src =
         backgrounds[currBackground]["video_files"][0].link;
     }
   }, [currBackground]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     axiosInstance
       .get("spotify/is-auth")
       .then((res) => res.data)
@@ -83,6 +111,24 @@ export default function Room(props) {
         window.location.replace(data.url);
       });
   };
+
+  const SpotifyPlayerMemo = useMemo(
+    () => (
+      <PlayerContainer>
+        <button onClick={() => setOpen(true)} className="hover-div">
+          &#8593;
+        </button>
+        <SpotifyPlayer
+          token={accessToken}
+          showSaveIcon
+          initialVolume={0.1}
+          play={true}
+          uris={currentSong?.uri}
+        />
+      </PlayerContainer>
+    ),
+    [accessToken, currentSong]
+  );
 
   if (!backgrounds.length) return <div>Loading...</div>;
 
@@ -139,11 +185,7 @@ export default function Room(props) {
             </Button>
           </Grid>
         ) : (
-          <Grid item xs={12} align="center">
-            <Button variant="contained" onClick={() => setOpen(true)}>
-              Open Spotify Player
-            </Button>
-          </Grid>
+          SpotifyPlayerMemo
         )}
       </Grid>
       <video autoPlay loop muted playsInline className="room-back">
@@ -166,11 +208,11 @@ export default function Room(props) {
       >
         <DialogTitle>Spotify Player</DialogTitle>
         <DialogContent>
-          <CustomSpotifyPlayer accessToken={accessToken} />
+          <CustomSpotifyPlayer
+            accessToken={accessToken}
+            setCurrentSong={setCurrentSong}
+          />
         </DialogContent>
-        <DialogActions>
-          <Playback accessToken={accessToken} />
-        </DialogActions>
         <DialogActions>
           <Button onClick={() => setOpen(false)}>Close</Button>
         </DialogActions>
