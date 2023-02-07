@@ -16,6 +16,16 @@ import axiosInstance from "../axios";
 import CustomSpotifyPlayer from "./CustomSpotifyPlayer";
 import CurrentSong from "./CurrentSong";
 
+var Themes = {
+  winter: "vkphljq",
+  sky: "xahwwl3",
+  nature: "bi6uhtj",
+  beach: "vmzq4k1",
+  city: "u2qrglb",
+};
+
+let videoQualties;
+
 export default function Room(props) {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
@@ -57,20 +67,45 @@ export default function Room(props) {
 
   useEffect(() => {
     getRoomDetails();
-    const client = createClient(
-      "ZDTi3aaQbzp3ZPwbSmpMnyFQtgQO70IUKxhxBxtQbmEnubRDNOT7cXO3"
-    );
-    client.collections.media({ per_page: 15, id: "u2qrglb" }).then((media) => {
-      setBackgrounds(media.media);
-    });
   }, []);
 
   useEffect(() => {
+    const client = createClient(
+      "ZDTi3aaQbzp3ZPwbSmpMnyFQtgQO70IUKxhxBxtQbmEnubRDNOT7cXO3"
+    );
+    client.collections
+      .media({ per_page: 15, id: Themes[data.theme] })
+      .then((media) => {
+        setBackgrounds(media.media);
+        videoQualties = Array.from({ length: media.media.length }, () => null);
+      });
+  }, [data]);
+
+  useEffect(() => {
+    let cancelPrevRequest = false;
     if (backgrounds.length) {
+      if (cancelPrevRequest) return;
+      let i = videoQualties[currBackground];
+      if (videoQualties[currBackground] == null) {
+        i = 0;
+        let currMax = 0;
+        for (
+          let n = 0;
+          n < backgrounds[currBackground]["video_files"].length;
+          n++
+        ) {
+          if (backgrounds[currBackground]["video_files"][n].width > currMax) {
+            currMax = backgrounds[currBackground]["video_files"][n].width;
+            i = n;
+          }
+        }
+        videoQualties[currBackground] = i;
+      }
       document.querySelector(".room-back").src =
-        backgrounds[currBackground]["video_files"][0].link;
+        backgrounds[currBackground]["video_files"][i].link;
     }
-  }, [currBackground]);
+    return () => (cancelPrevRequest = true);
+  }, [backgrounds, currBackground]);
 
   useEffect(() => {
     axiosInstance
@@ -190,10 +225,7 @@ export default function Room(props) {
         )}
       </Grid>
       <video autoPlay loop muted playsInline className="room-back">
-        <source
-          src={backgrounds[currBackground]["video_files"][0].link}
-          type="video/mp4"
-        />
+        <source src={""} type="video/mp4" />
       </video>
       <Dialog
         sx={{

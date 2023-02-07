@@ -135,9 +135,10 @@ export default function EditRoomForm({ theRoom, setUpdateRooms, handleClose }) {
               <em>None</em>
             </MenuItem>
             <MenuItem value="winter">Winter</MenuItem>
-            <MenuItem value="cafe">Cafe</MenuItem>
-            <MenuItem value="summer">Summer</MenuItem>
-            <MenuItem value="library">Library</MenuItem>
+            <MenuItem value="sky">Sky</MenuItem>
+            <MenuItem value="nature">Nature</MenuItem>
+            <MenuItem value="beach">Beach</MenuItem>
+            <MenuItem value="city">City</MenuItem>
           </Select>
           {themeError && (
             <FormHelperText error>Select the room theme</FormHelperText>
