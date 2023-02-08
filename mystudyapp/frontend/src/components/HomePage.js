@@ -4,7 +4,6 @@ import LoginPage from "./LoginPage";
 import Logout from "./Logout";
 import UsersRooms from "./UserRooms";
 import Room from "./Room";
-import axiosInstance from "../axios";
 import {
   BrowserRouter as Router,
   Routes,

@@ -15,7 +15,7 @@ import { createClient } from "pexels";
 import axiosInstance from "../axios";
 import CustomSpotifyPlayer from "./CustomSpotifyPlayer";
 import CurrentSong from "./CurrentSong";
-
+import Timer from "./Timer";
 var Themes = {
   winter: "vkphljq",
   sky: "xahwwl3",
@@ -253,6 +253,7 @@ export default function Room(props) {
           <Button onClick={() => setOpen(false)}>Close</Button>
         </DialogActions>
       </Dialog>
+      <Timer />
     </>
   );
 }
