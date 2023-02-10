@@ -1,17 +1,26 @@
 import React, { useState, useEffect } from "react";
 import { styled } from "@mui/material/styles";
-import { Grid, Paper, Typography, TextField, Button, Box } from "@mui/material";
-import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
-
+import {
+  Grid,
+  Paper,
+  Typography,
+  TextField,
+  Button,
+  Box,
+  ButtonBase,
+} from "@mui/material";
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import PauseIcon from "@mui/icons-material/Pause";
+import ReplayIcon from "@mui/icons-material/Replay";
 const InputLine = styled("div")({
   display: "flex",
   alignItems: "center",
-  width: "100px",
-  height: "50px",
+  width: "100%",
+  height: "100%",
   position: "relative",
   "& .time": {
     position: "absolute",
-    right: 4,
+    left: 20,
   },
 
   "& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button": {
@@ -97,17 +106,17 @@ export default function Timer() {
       sx={{
         p: 2,
         margin: "auto",
-        maxWidth: 500,
+        maxWidth: 200,
         flexGrow: 1,
         backgroundColor: (theme) =>
           theme.palette.mode === "dark" ? "#1A2027" : "#fff",
       }}
     >
       <Grid container spacing={2}>
-        <Grid item xs={12}>
+        <Grid item xs={12} alignItems="center">
           <Typography>Pomodoro</Typography>
         </Grid>
-        <Grid item xs={6} alignItems="center">
+        <Grid item alignItems="center" xs={8}>
           {editing ? (
             <InputLine>
               <Typography className="time">
@@ -122,7 +131,13 @@ export default function Timer() {
               />
             </InputLine>
           ) : (
-            <Typography onClick={() => setEditing(true)} cursor="pointer">
+            <Typography
+              onClick={() => {
+                setEditing(true);
+                setIsRunning(false);
+              }}
+              cursor="pointer"
+            >
               <Box sx={{ letterSpacing: 6, m: 1 }}>
                 {`${minutes < 10 ? "0" + minutes : minutes}m ${
                   seconds < 10 ? "0" + seconds : seconds
@@ -131,18 +146,24 @@ export default function Timer() {
             </Typography>
           )}
         </Grid>
-        <Grid item xs={2} alignItems="center" onClick={handleStart}>
-          <PlayCircleOutlineIcon />
-        </Grid>
-        <Grid item xs={2} alignItems="center">
-          <Button variant="contained" size="s" onClick={handleStop}>
-            Stop
-          </Button>
-        </Grid>
-        <Grid item xs={2} alignItems="center">
-          <Button variant="contained" size="s" onClick={handleReset}>
-            Reset
-          </Button>
+        {isRunning ? (
+          <Grid item alignItems="center" onClick={handleStop} cursor="pointer">
+            <ButtonBase xs={2} sx={{ width: 20, height: "100%" }}>
+              <PauseIcon />
+            </ButtonBase>
+          </Grid>
+        ) : (
+          <Grid item alignItems="center" onClick={handleStart} cursor="pointer">
+            <ButtonBase xs={2} sx={{ width: 20, height: "100%" }}>
+              <PlayArrowIcon />
+            </ButtonBase>
+          </Grid>
+        )}
+
+        <Grid item alignItems="center" onClick={handleReset} cursor="pointer">
+          <ButtonBase xs={2} sx={{ width: 20, height: "100%" }}>
+            <ReplayIcon />
+          </ButtonBase>
         </Grid>
       </Grid>
     </Paper>
